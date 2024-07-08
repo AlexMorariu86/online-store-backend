@@ -13,6 +13,7 @@ export class ProductsService {
       data: {
         name: data.name,
         description: data.description,
+        categoryId: data.categoryId,
       },
     });
   }
@@ -31,6 +32,7 @@ export class ProductsService {
       data: {
         name: data.name,
         description: data.description,
+        categoryId: data.categoryId,
       },
     });
   }
