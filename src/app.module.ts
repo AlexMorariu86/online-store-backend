@@ -10,6 +10,7 @@ import { AuthController } from './auth/auth.controller';
     ConfigModule.forRoot(),
     UsersModule,
     JwtModule.register({
+      global: true,
       secret: process.env.JWT_SECRET || 'yourSecretKey',
       signOptions: { expiresIn: '1h' },
     }),

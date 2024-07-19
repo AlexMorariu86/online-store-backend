@@ -4,6 +4,7 @@ import { LoginUserDto } from '../users/dto/login-user.dto';
 import { RegisterUserDto } from '../users/dto/register-user.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { randomBytes } from 'crypto';
 
 @Controller('auth')
 export class AuthController {
@@ -23,7 +24,9 @@ export class AuthController {
   }
 
   @Post('login')
-  async login(@Body() loginUserDto: LoginUserDto) {
+  async login(
+    @Body() loginUserDto: LoginUserDto,
+  ): Promise<{ access_token: string }> {
     const user = await this.usersService.findByEmail(loginUserDto.email);
     console.log(user);
     if (!user) {
@@ -37,10 +40,13 @@ export class AuthController {
     if (!isPasswordMatching) {
       throw new BadRequestException('Invalid credentials');
     }
+
+    const jwtSecret = randomBytes(256).toString('base64');
+    console.log(jwtSecret);
     const payload = { email: user.email, sub: user.id };
 
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token: await this.jwtService.signAsync(payload),
     };
   }
 }
